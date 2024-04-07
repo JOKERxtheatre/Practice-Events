@@ -1,7 +1,8 @@
+import { ReactNode } from "react";
 import { Button } from "../ui/button";
 
 interface Props {
-  children: string;
+  children: ReactNode;
   closeModal: () => void;
   isModeModel: boolean;
 }

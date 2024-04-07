@@ -1,9 +1,14 @@
 import { Button } from "../ui/button";
-interface Props {
-  events: () => void;
-  handleDel: () => void;
+import { Event } from "types/index";
+// Определяем интерфейс для объекта события
+
+
+export interface Props {
+  events: Event[]; // Исправлен тип данных для events
+  handleDel: (id: string) => void; // Исправлен тип для handleDel
 }
-function EventList({ events, handleDel }: Props) {
+
+function EventList({ events, handleDel } : Props) {
   return (
     <div data-aos="zoom-out" data-aos-duration="500">
       {events.length === 0 && (

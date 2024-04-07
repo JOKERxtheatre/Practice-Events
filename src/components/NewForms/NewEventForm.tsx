@@ -2,65 +2,63 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
+import {  NewEvent } from "types/index";
 
-interface Props {
-  newEvents: string;
-}
-function NewEventForm({ newEvents }: Props) {
-  // const [title, setTitle] = useState("");
-  // const [date, setDate] = useState("");
-  // const [location, setLocation] = useState("fargana");
-  const title = useRef();
-  const date = useRef();
-  const location = useRef("Xorazm");
-  console.log("rendering...");
-  const form = useRef();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSubmit = (e: any) => {
+function NewEventForm({ newEvents } : NewEvent) {
+  const title = useRef<HTMLInputElement>(null); // Указываем тип для useRef
+  const date = useRef<HTMLInputElement>(null); // Указываем тип для useRef
+  const location = useRef<HTMLSelectElement>(null); // Указываем тип для useRef
+  const form = useRef<HTMLFormElement>(null); // Указываем тип для useRef
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const event = {
-      title: title.current.value,
-      date: date.current.value,
-      id: uuidv4(),
-      location: location.current.value,
-    };
-    newEvents(event);
-    resetInput();
+    // Проверяем, что все поля заполнены
+    if (title.current && date.current && location.current) {
+      const event: NewEvent = {
+        id: uuidv4(),
+        title: title.current.value,
+        date: date.current.value,
+        location: location.current.value,
+        newEvents: function (): void {
+          throw new Error("Function not implemented.");
+        }
+      };
+      newEvents(event);
+      resetInput();
+    }
   };
+
   const resetInput = () => {
-    form.current.reset();
+    if (form.current) {
+      form.current.reset();
+    }
   };
+
   return (
     <form onSubmit={handleSubmit} ref={form}>
       <label className="flex flex-col my-5">
         <span>Event Title</span>
         <Input
-        required
+          required
           id="name"
           type="text"
           ref={title}
-          // onChange={(e) => setTitle(e.target.value)}
-          // value={title}
         />
       </label>
       <label className="flex flex-col my-5">
         <span>Event Date :</span>
         <Input
-        required
+          required
           id="name"
           type="date"
           ref={date}
-          // onChange={(e) => setDate(e.target.value)}
-          // value={date}
         />
       </label>
       <label aria-required>
-        <span>Even Location:</span>
+        <span>Event Location:</span>
         <select
-          // onChange={(e) => {
-          //   setLocation(e.target.value);
-          // }}
+          required
           ref={location}
         >
           <option value="Xorazm">Xorazm</option>
@@ -70,7 +68,7 @@ function NewEventForm({ newEvents }: Props) {
       </label>
 
       <div className="w-full flex items-center justify-center pt-3">
-        <Button variant={"destructive"}>Submit</Button>
+        <Button variant={"destructive"} type="submit">Submit</Button> {/* Добавляем type="submit" для кнопки Submit */}
       </div>
     </form>
   );
